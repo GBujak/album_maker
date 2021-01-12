@@ -68,13 +68,14 @@ def download_files(choices):
     dir_name = slugify(choices['title'])
     os.mkdir(dir_name)
 
-    for song in choices['songs']:
+    for song in choices['songs'][:]:
         response = http_get(song['url'], allow_redirects=True, stream=True)
 
         extension = guess_extension(response.headers['content-type'])
         print(f"Extension: {extension}")
         if extension == None:
             print("Cannot guess filename extension")
+            choices["songs"].remove(song)
             continue
 
         filename_no_ext  = slugify(song['title'])
